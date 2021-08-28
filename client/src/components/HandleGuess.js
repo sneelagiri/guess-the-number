@@ -54,7 +54,8 @@ export default class HandleGuess extends Component {
     this.setState({
       numGuesses: 3,
       win: null,
-      randomNumber: randomNumber
+      randomNumber: randomNumber,
+      userGuess: 0
     });
   };
 
