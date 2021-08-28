@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import axios from "axios";
+const databaseUrl = "http://localhost:4000";
 
 export default class HandleGuess extends Component {
   constructor(props) {
@@ -14,11 +16,14 @@ export default class HandleGuess extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if ((this.state.numGuesses = 3)) {
       const randomNumber = Math.floor(Math.random() * 100) + 1;
       this.setState({
         randomNumber: randomNumber,
+      });
+      await axios.post(`${databaseUrl}/guesses-left`, {
+        guessesLeft: this.state.numGuesses,
       });
     }
   }
@@ -33,9 +38,12 @@ export default class HandleGuess extends Component {
     }
   };
 
-  decreaseGuesses = () => {
+  decreaseGuesses = async () => {
     this.setState({
       numGuesses: this.state.numGuesses - 1,
+    });
+    await axios.post(`${databaseUrl}/guesses-left`, {
+      guessesLeft: this.state.numGuesses,
     });
   };
 
@@ -55,7 +63,7 @@ export default class HandleGuess extends Component {
       numGuesses: 3,
       win: null,
       randomNumber: randomNumber,
-      userGuess: 0
+      userGuess: 0,
     });
   };
 
@@ -64,9 +72,7 @@ export default class HandleGuess extends Component {
       <div>
         {this.state.win === null ? (
           <div>
-            <h2>
-              Number of Guesses Left: {this.state.numGuesses}
-            </h2>
+            <h2>Number of Guesses Left: {this.state.numGuesses}</h2>
             <form onSubmit={this.handleSubmit}>
               <label>Your guess: </label>
               <input
